@@ -1,6 +1,6 @@
 var dash_button = require('node-dash-button');
 var MaxCube = require('maxcube');
-
+var config = require('./config.json');
 
 // Buttons
 var fairyButton = "50:f5:da:55:fc:d7";
