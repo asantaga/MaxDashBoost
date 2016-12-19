@@ -47,8 +47,9 @@ function boostRadiators(radiators) {
 
         for (var i = 0; i < radiators.length; i++) {
             console.log("Boosting radiator " + radiators[i]);
-            myMaxCube.setTemperature('13856e', 'BOOST').then(
+            myMaxCube.setTemperature(radiators[i], 'BOOST').then(
                 function (success) {
+                    console.log(JSON.stringify(success));
                     console.log('Radiator '+radiators[i]+' BOOSTED');
                 },
                 function (error) {
