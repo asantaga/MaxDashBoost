@@ -1,4 +1,11 @@
 {
-  "name": "application-name",
-  "version": "0.0.1"
+    "name": "MaxDashBoost", 
+    "version": "0.0.1", 
+    "description" : "NodeJS App which boosts Eq-3 Max! Radiator Valves from a Amazon DashButton", 
+    "main" : "maxdashboost.js", 
+    "dependencies" :         
+     {
+        "maxcube" : "^1.0.4", 
+        "node-dash-button": "0.6.0"
+     }
 }

@@ -2,52 +2,59 @@ var dash_button = require('node-dash-button');
 var MaxCube = require('maxcube');
 var config = require('./config.json');
 
-// Buttons
-var fairyButton = "50:f5:da:55:fc:d7";
-var finishButton = "ac:63:be:1d:1e:2f";
-var dashButtons = [fairyButton,finishButton];
 
-// CubeIP
-var maxCubeIP = "192.168.0.222";
 // Radiators to Boost per set
 var boostSet1 = ["13856e", "13856e"];
 
+console.log(config.maxCubeIp);
 
-var dashButtonListener = dash_button(dashButtons, null, null, 'all'); //address from step above
+var dashButtonList = [];
+for (i = 0; i < config.dashButtons.length; i++)
+{
+    dashButtonList.push(config.dashButtons[i].id);
+}
+
+console.log('Listening to ' + i + " DashButtons " + dashButtonList);
+
+var dashButtonListener = dash_button(dashButtonList, null, null, 'all'); //address from step above
 dashButtonListener.on("detected", function (dash_id) {
-    if (dash_id === fairyButton) {
-        console.log("found fairy button");
-        try{
-            boostRadiators(boostSet1);
-        }
-        catch (err)
-        {
-            // Display error and continue
-            console.log(err);
-        }
+    // Button Pressed, find name of DashButton
+
+    var dashButtonData = config.dashButtons.filter(function (v) {
+        return v.id === dash_id;
+    })[0];
+    console.log(dashButtonData);
+    console.log(typeof dashButtonData);
+    if ( typeof dashButtonData === 'undefined' || dashButtonData === null )
+    {
+        console.log("Unknown DashButton Found");
     }
-    else if (dash_id === finishButton) {
-        console.log("found finish Dash");
+    else
+    {
+         console.log("Found Button "+dashButtonData.name+" boosting "+dashButtonData.boostRadiators);
+         boostRadiators(dashButtonData.boostRadiators);
     }
+
 });
 
 // Pass in a colleciton of radiators
 function boostRadiators(radiators) {
-    if (radiators==null) throw  "NoRadiators provided";
-    var myMaxCube = new MaxCube(maxCubeIP, 62910);
+   if ( typeof radiators === 'undefined' || radiators === null )
+        throw  "NoRadiators provided";
+    var myMaxCube = new MaxCube(config.maxCubeIp, 62910);
     myMaxCube.on('connected', function () {
         console.log('Connected to Max Cube');
 
         for (var i = 0; i < radiators.length; i++) {
             console.log("Boosting radiator " + radiators[i]);
-            //myMaxCube.setTemperature('13856e', 'BOOST').then(
-            //    function (success) {
-            //        console.log('Radiators BOOSTED');
-            //    },
-            //    function (error) {
-            //        console.log('Error Boosting MainRoom');
-            //    }
-            // );
+            myMaxCube.setTemperature('13856e', 'BOOST').then(
+                function (success) {
+                    console.log('Radiator '+radiators[i]+' BOOSTED');
+                },
+                function (error) {
+                    console.log('Error Boosting '+radiators[i]);
+                }
+             );
         }
     });
 }

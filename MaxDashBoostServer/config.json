@@ -1,0 +1,15 @@
+{
+    "maxCubeIp": "192.168.0.222",
+    "dashButtons": [
+        {
+            "name": "FairyButton",
+            "id": "50:f5:da:55:fc:d7",
+            "boostRadiators": ["xxx", "yyyy"]
+        },
+        {
+            "name": "FinishButton",
+            "id": "ac:63:be:1d:1e:2f",
+            "boostRadiators": ["13856e", "1385f3"]
+        } 
+    ]
+}
