@@ -8,7 +8,7 @@ var boostSet1 = [
     "13856e", "13856e"
 ];
 
-console.log("Connecting to MaxCube @ "+  config.maxCubeIp);
+console.log("Connecting to MaxCube @ " + config.maxCubeIp);
 // Print out DashButtons Being listened to
 var dashButtonList = [
 ];
@@ -47,29 +47,39 @@ function boostRadiators(radiators)
     {
         throw  "NoRadiators provided to boostRadiators";
     }
-    console.log("Boosting Radiators "+JSON.stringify(radiators));
-    
+    console.log("Boosting Radiators " + JSON.stringify(radiators));
+
     var myMaxCube = new MaxCube(config.maxCubeIp, 62910);
     myMaxCube.on('connected',
             function ()
             {
-                console.log('Connected to Max Cube');
-                promise.each(radiators,
-                        function (element, index, length)
-                        {
-                            return  myMaxCube.setTemperature(element, 'BOOST').then(
-                                    function (success)
-                                    {
-                                        console.log(JSON.stringify(success));
-                                        console.log('Radiator ' + radiators[i] + ' BOOSTED');
-                                    },
-                                    function (error)
-                                    {
-                                        console.log('Error Boosting ' + radiators[i]);
-                                    });
-                        });
-                // Done Boosting close connection
-                myMaxCube.close().then (function() { console.log('Connection Closed');});                
+                console.log('Connected to Max Cube, now waiting 1second');
+                setTimeout(function ()
+                {
+
+                    promise.each(radiators,
+                            function (element, index, length)
+                            {
+                                return  myMaxCube.setTemperature(element, 'BOOST').then(
+                                        function (success)
+                                        {
+                                            console.log(JSON.stringify(success));
+                                            console.log('Radiator ' + radiators[i] + ' BOOSTED');
+                                            resolve(success);
+                                        },
+                                        function (error)
+                                        {
+                                            console.log('Error Boosting ' + radiators[i]);
+                                            reject(error);
+                                        });
+                            });
+                    // Done Boosting close connection
+                    myMaxCube.close().then(function ()
+                    {
+                        console.log('Connection Closed');
+                    });
+                },1000);
+
             }
     );
 
